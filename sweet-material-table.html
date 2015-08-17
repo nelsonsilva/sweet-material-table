@@ -84,9 +84,11 @@
       <template is="dom-if" if="[[!customTheadContent]]">
         <div class="thead">
           <div class="tr horizontal layout">
-            <div class="th checkbox">
-              <paper-checkbox id="selectAll" on-click="_selectAll"></paper-checkbox>
-            </div>
+            <template is="dom-if" if="[[showSelect]]" restamp>
+              <div class="th checkbox">
+                <paper-checkbox id="selectAll" on-click="_selectAll"></paper-checkbox>
+              </div>
+            </template>
             <template is="dom-repeat" items="{{columns}}" as="column">
               <div class="flex th" data-column$="[[column.key]]" on-click="_sortColumn">
 
@@ -120,9 +122,11 @@
 
           <template is="dom-repeat" items="{{data}}" as="instance">
             <div class="tr horizontal layout" index="[[index]]">
-              <div class="td checkbox">
-                <paper-checkbox on-click="_selectRow" index="[[index]]"></paper-checkbox>
-              </div>
+              <template is="dom-if" if="[[showSelect]]" restamp>
+                <div class="td checkbox">
+                  <paper-checkbox on-click="_selectRow" index="[[index]]"></paper-checkbox>
+                </div>
+              </template>
 
               <template is="dom-repeat" items="{{columns}}" as="column">
 
@@ -259,6 +263,11 @@
           value: function () {
             return [];
           }
+        },
+        showSelect: {
+          type: Boolean,
+          notify: true,
+          value: true
         },
         globalActions: {
           type: Array,
@@ -481,7 +490,7 @@
         }
 
         var selectAllElement = this.querySelector('#selectAll');
-        if (selectAllElement) {
+        if (this.showSelect && selectAllElement) {
           selectAllElement.checked = (this.selectedIndexes && this.data && selectedIndexesLength === this.data.length);
         }
 
